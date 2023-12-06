@@ -1,0 +1,12 @@
+version: '0.1'
+services:
+  mcsm-daemon:
+    container_name: mcsm-daemon
+    image: eterluu/mcsm-web:latest
+    mem_limit: 1G
+    memswap_limit: 1G
+    restart: always
+    ports:
+      - "23333:23333"
+    volumes:
+      - /var/mcsm:/srv
