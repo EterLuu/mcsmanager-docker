@@ -18,6 +18,7 @@ services:
     depends_on:
       - minecraft-db
       - minecraft-pool
+      - minecraft-redis
     environment:
       - PUID=25565
       - PGID=25565
@@ -87,6 +88,29 @@ services:
     networks:
       - default
     command: [mysqld, --character-set-server=utf8mb4, --collation-server=utf8mb4_unicode_ci, --wait_timeout=28800, --innodb-buffer-pool-size=9G, --log-warnings=0, --max_connections=2000]
+    # tty: true
+  minecraft-redis:
+    container_name: minecraft-redis
+    hostname: minecraft-redis
+    image: bitnami/redis:latest
+    restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: '2'
+          memory: 1G
+        reservations:
+          cpus: '1'
+          memory: 1G
+    environment:
+      - LANG=C.UTF-8
+      - TZ=Asia/Shanghai
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_PORT_NUMBER=6379
+    networks:
+      - default
     # tty: true
 networks:
   minecraft-waterfall:

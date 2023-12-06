@@ -8,6 +8,8 @@ ENV NODE_ENV=production
 ENV PUID 25565
 ENV PGID 25565
 
+RUN apt-get install libstdc++6
+
 WORKDIR /usr/lib/jvm
 
 RUN wget -nv https://cdn.azul.com/zulu/bin/zulu17.42.21-ca-crac-jdk17.0.7-linux_x64.tar.gz \
