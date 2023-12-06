@@ -1,6 +1,6 @@
 # mcsmanager-docker
 
-Dockerfile for [MCSManager](https://github.com/MCSManager/MCSManager)
+Dockerfiles for [MCSManager](https://github.com/MCSManager/MCSManager)
 
 ## How To (Building docker image)
 Making sure that you have installed docker.
