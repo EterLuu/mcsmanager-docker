@@ -3,9 +3,17 @@ services:
   mcsm-web:
     container_name: mcsm-web
     image: eterluu/mcsm-web:latest
-    mem_limit: 1G
-    memswap_limit: 1G
     restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: '1'
+          memory: 500M
+        reservations:
+          cpus: '0.1'
+          memory: 500M
     environment:
       - PUID=25565
       - PGID=25565
@@ -13,3 +21,4 @@ services:
       - "23333:23333"
     volumes:
       - /srv/mcsm/web:/opt/mcsmanager/web/data
+    # tty: true

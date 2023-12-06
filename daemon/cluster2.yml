@@ -1,0 +1,36 @@
+version: '3'
+services:
+  mcsm-daemon-cluster2:
+    container_name: mcsm-daemon-cluster2
+    hostname: mcsm-daemon-cluster2
+    image: eterluu/mcsm-daemon:latest
+    restart: always
+    deploy:
+      restart_policy:
+        condition: on-failure
+      resources:
+        limits:
+          cpus: '4'
+          memory: 14G
+        reservations:
+          cpus: '2'
+          memory: 12G
+    environment:
+      - PUID=25565
+      - PGID=25565
+    ports:
+      - "24445:24444"
+    volumes:
+      - /srv/minecraft/mcsm-daemon-cluster2:/srv/minecraft/servers
+      - /srv/mcsm/mcsm-daemon-cluster2:/opt/mcsmanager/daemon/data
+    networks:
+      - minecraft-waterfall
+      - minecraft-database
+    # tty: true
+networks:
+  minecraft-waterfall:
+    name: minecraft-waterfall
+    external: true
+  minecraft-database:
+    name: minecraft-database
+    external: true
