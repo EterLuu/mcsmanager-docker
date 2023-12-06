@@ -1,4 +1,4 @@
-version: '0.1'
+version: '3'
 services:
   mcsm-web:
     container_name: mcsm-web
@@ -6,5 +6,10 @@ services:
     mem_limit: 1G
     memswap_limit: 1G
     restart: always
+    environment:
+      - PUID=25565
+      - PGID=25565
     ports:
       - "23333:23333"
+    volumes:
+      - /srv/mcsm/web:/opt/mcsmanager/web/data
