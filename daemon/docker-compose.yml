@@ -6,6 +6,9 @@ services:
     mem_limit: 32g
     memswap_limit: 32g
     restart: always
+    environment:
+      - PUID=25565
+      - PGID=25565
     ports:
       - "24444:24444"
     volumes:
