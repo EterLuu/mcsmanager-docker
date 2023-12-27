@@ -10,26 +10,26 @@ ENV NODE_ENV=production
 ENV PUID ${PUID}
 ENV PGID ${PGID}
 
-RUN apk add libstdc++
+RUN apk add ttf-dejavu fontconfig libstdc++
 
 WORKDIR /usr/lib/jvm
 
 RUN ARCH='linux*' && alpineArch="$(apk --print-arch)" \
 		&& case "${alpineArch##*-}" in \
 			x86_64) ARCH='x64';; \
-			x86) ARCH='i686';; \
 			aarch64) ARCH='aarch64';; \
-			arm*) ARCH='aarch32hf';; \
 			*) ;; \
 		esac \
-	&& wget -nv https://cdn.azul.com/zulu/bin/zulu17.46.19-ca-jdk17.0.9-linux_${ARCH}.tar.gz \
-	&& wget -nv https://cdn.azul.com/zulu/bin/zulu8.74.0.17-ca-jdk8.0.392-linux_${ARCH}.tar.gz \
-	&& tar -zxf zulu17.46.19-ca-jdk17.0.9-linux_${ARCH}.tar.gz -o \
-	&& tar -zxf zulu8.74.0.17-ca-jdk8.0.392-linux_${ARCH}.tar.gz -o \
-	&& rm zulu17.46.19-ca-jdk17.0.9-linux_${ARCH}.tar.gz \
-	&& rm zulu8.74.0.17-ca-jdk8.0.392-linux_${ARCH}.tar.gz \
-	&& mv zulu17.46.19-ca-jdk17.0.9-linux_${ARCH} java17 \
-	&& mv zulu8.74.0.17-ca-jdk8.0.392-linux_${ARCH} java8 \
+	&& JDK17="zulu17.46.19-ca-jdk17.0.9-linux_musl_${ARCH}" \
+ 	&& JDK8="zulu8.74.0.17-ca-jdk8.0.392-linux_musl_${ARCH}" \
+	&& wget -nv https://cdn.azul.com/zulu/bin/${JDK17}.tar.gz \
+	&& wget -nv https://cdn.azul.com/zulu/bin/${JDK8}.tar.gz \
+	&& tar -zxf ${JDK17}.tar.gz -o \
+	&& tar -zxf ${JDK8}.tar.gz -o \
+	&& rm ${JDK17}.tar.gz \
+	&& rm ${JDK8}.tar.gz \
+	&& mv ${JDK17} java17 \
+	&& mv ${JDK8} java8 \
 	&& ln -s /usr/lib/jvm/java17/bin/java /usr/bin/java \
 	&& ln -s /usr/lib/jvm/java8/bin/java /usr/bin/java8
 
