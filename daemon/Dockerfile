@@ -10,7 +10,8 @@ ENV NODE_ENV=production
 ENV PUID ${PUID}
 ENV PGID ${PGID}
 
-RUN apk add ttf-dejavu fontconfig libstdc++
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories \
+	&& apk add ttf-dejavu fontconfig libstdc++
 
 WORKDIR /usr/lib/jvm
 
