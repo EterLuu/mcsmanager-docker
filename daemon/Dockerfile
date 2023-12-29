@@ -11,7 +11,7 @@ ENV PUID ${PUID}
 ENV PGID ${PGID}
 
 RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories \
-	&& apk add ttf-dejavu fontconfig libstdc++
+	&& apk add ttf-dejavu fontconfig libstdc++ eudev-libs gcompat
 
 WORKDIR /usr/lib/jvm
 
