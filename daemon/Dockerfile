@@ -1,28 +1,30 @@
-FROM node:14.17.6-alpine
+FROM node:14.17.6
 
 ARG TZ="Asia/Shanghai"
-ARG PUID=25565
-ARG PGID=25565
 
 ENV TZ ${TZ}
 ENV LANG en_US.UTF-8
 ENV NODE_ENV=production
-ENV PUID ${PUID}
-ENV PGID ${PGID}
+ENV PUID=25565
+ENV PGID=25565
+ENV PUSERNAME="minecraft"
+ENV PGROUPNAME="minecraft"
 
-RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.tuna.tsinghua.edu.cn/g' /etc/apk/repositories \
-	&& apk add ttf-dejavu fontconfig libstdc++ eudev-libs gcompat
+RUN apt-get install libstdc++6
+
+RUN groupadd --non-unique -g ${PGID} {PGROUPNAME} \
+	&& useradd --non-unique -g ${PGID} -u ${PUID} {PUSERNAME} \
 
 WORKDIR /usr/lib/jvm
 
-RUN ARCH='linux*' && alpineArch="$(apk --print-arch)" \
-		&& case "${alpineArch##*-}" in \
-			x86_64) ARCH='x64';; \
-			aarch64) ARCH='aarch64';; \
+RUN ARCH='linux*' && dpkgArch="$(dpkg --print-architecture)" \
+		&& case "${dpkgArch##*-}" in \
+			amd64) ARCH='x64';; \
+			arm64) ARCH='aarch64';; \
 			*) ;; \
 		esac \
-	&& JDK17="zulu17.46.19-ca-jdk17.0.9-linux_musl_${ARCH}" \
- 	&& JDK8="zulu8.74.0.17-ca-jdk8.0.392-linux_musl_${ARCH}" \
+	&& JDK17="zulu17.46.19-ca-jdk17.0.9-linux_${ARCH}" \
+ 	&& JDK8="zulu8.74.0.17-ca-jdk8.0.392-linux_${ARCH}" \
 	&& wget -nv https://cdn.azul.com/zulu/bin/${JDK17}.tar.gz \
 	&& wget -nv https://cdn.azul.com/zulu/bin/${JDK8}.tar.gz \
 	&& tar -zxf ${JDK17}.tar.gz -o \
