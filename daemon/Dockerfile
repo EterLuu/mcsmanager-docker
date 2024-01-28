@@ -12,8 +12,8 @@ ENV PGROUPNAME="minecraft"
 
 RUN apt-get install libstdc++6
 
-RUN groupadd --non-unique -g ${PGID} {PGROUPNAME} \
-	&& useradd --non-unique -g ${PGID} -u ${PUID} {PUSERNAME} \
+RUN groupadd --non-unique -g ${PGID} ${PGROUPNAME} \
+	&& useradd --non-unique -g ${PGID} -u ${PUID} ${PUSERNAME}
 
 WORKDIR /usr/lib/jvm
 
