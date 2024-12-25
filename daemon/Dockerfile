@@ -1,19 +1,12 @@
-FROM node:14.17.6
+FROM node:16.20.2
 
 ARG TZ="Asia/Shanghai"
 
 ENV TZ ${TZ}
 ENV LANG en_US.UTF-8
 ENV NODE_ENV=production
-ENV PUID=25565
-ENV PGID=25565
-ENV PUSERNAME="minecraft"
-ENV PGROUPNAME="minecraft"
 
 RUN apt-get install libstdc++6
-
-RUN groupadd --non-unique -g ${PGID} ${PGROUPNAME} \
-	&& useradd --non-unique -g ${PGID} -u ${PUID} ${PUSERNAME}
 
 WORKDIR /usr/lib/jvm
 
@@ -23,31 +16,33 @@ RUN ARCH='linux*' && dpkgArch="$(dpkg --print-architecture)" \
 			arm64) ARCH='aarch64';; \
 			*) ;; \
 		esac \
-	&& JDK17="zulu17.46.19-ca-jdk17.0.9-linux_${ARCH}" \
- 	&& JDK8="zulu8.74.0.17-ca-jdk8.0.392-linux_${ARCH}" \
+  	&& JDK21="zulu21.38.21-ca-jdk21.0.5-linux_${ARCH}" \
+	&& JDK17="zulu17.54.21-ca-jdk17.0.13-linux_${ARCH}" \
+ 	&& JDK8="zulu8.82.0.21-ca-jdk8.0.432-linux_${ARCH}" \
+	&& wget -nv https://cdn.azul.com/zulu/bin/${JDK21}.tar.gz \
 	&& wget -nv https://cdn.azul.com/zulu/bin/${JDK17}.tar.gz \
 	&& wget -nv https://cdn.azul.com/zulu/bin/${JDK8}.tar.gz \
+	&& tar -zxf ${JDK21}.tar.gz -o \
 	&& tar -zxf ${JDK17}.tar.gz -o \
 	&& tar -zxf ${JDK8}.tar.gz -o \
+	&& rm ${JDK21}.tar.gz \
 	&& rm ${JDK17}.tar.gz \
 	&& rm ${JDK8}.tar.gz \
+	&& mv ${JDK21} java17 \
 	&& mv ${JDK17} java17 \
 	&& mv ${JDK8} java8 \
-	&& ln -s /usr/lib/jvm/java17/bin/java /usr/bin/java \
+	&& ln -s /usr/lib/jvm/java21/bin/java /usr/bin/java \
+	&& ln -s /usr/lib/jvm/java17/bin/java /usr/bin/java17 \
 	&& ln -s /usr/lib/jvm/java8/bin/java /usr/bin/java8
 
 WORKDIR /opt/mcsmanager
 
-RUN wget -nv https://gitee.com/mcsmanager/MCSManager/releases/download/release/mcsmanager_linux_release.tar.gz \
+RUN wget -nv https://mcsmanager.oss-cn-guangzhou.aliyuncs.com/mcsmanager_linux_release.tar.gz \
 	&& tar -zxf mcsmanager_linux_release.tar.gz -o \
-	&& rm mcsmanager_linux_release.tar.gz \
-	&& chown -R ${PUID}:${PGID} daemon \
-	&& chown -R ${PUID}:${PGID} web
+	&& rm mcsmanager_linux_release.tar.gz
 
 WORKDIR /opt/mcsmanager/daemon
 
-RUN npm install --registry=https://registry.npmmirror.com --production
-
-USER ${PUID}
+RUN npm install --registry=https://registry.npmmirror.com --production --no-fund --no-audit
 
 CMD ["node", "app.js"]
