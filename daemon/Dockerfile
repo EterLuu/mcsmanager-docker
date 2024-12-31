@@ -28,7 +28,7 @@ RUN ARCH='linux*' && dpkgArch="$(dpkg --print-architecture)" \
 	&& rm ${JDK21}.tar.gz \
 	&& rm ${JDK17}.tar.gz \
 	&& rm ${JDK8}.tar.gz \
-	&& mv ${JDK21} java17 \
+	&& mv ${JDK21} java21 \
 	&& mv ${JDK17} java17 \
 	&& mv ${JDK8} java8 \
 	&& ln -s /usr/lib/jvm/java21/bin/java /usr/bin/java \
